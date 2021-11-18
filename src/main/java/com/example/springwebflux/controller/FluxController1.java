@@ -1,10 +1,13 @@
 package com.example.springwebflux.controller;
 
+import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.util.Optional;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 public class FluxController1 {
 
@@ -24,5 +27,83 @@ public class FluxController1 {
         System.out.println("------");
         Flux.range(1, 10).bufferWhile(i -> i % 2 == 0).subscribe(System.out::println);
 
+        //map
+        Flux.range(1,3).map(x -> x * x);
+        System.out.println("------");
+
+        //flatMap  把流中的每个元素转换成一个流 ,在把转换之后得到的所以流中的元素进行合并
+        Flux.range(1,3).flatMap(x -> Mono.just(x * x)).subscribe(System.out::println);
+
+        //window  类似于buffer ,所不同的是,window 操作符是把当前流中的元素收集到另外的Flux序列中, 因此返回值是Flux<Flux<T>>
+        Flux.range(1, 5).window(2).toIterable().forEach(w -> {
+            w.subscribe(System.out::println);
+            System.out.println("------");
+        });
+
+
+        //过滤操作符: filter  first  last  skip 忽略数据流的前n 个元素    take   按照指定的数量来提取元素,也可以按照指定的时间间隔
+        Flux.range(1, 10).filter(i -> i % 2 == 0).subscribe(System.out::println);
+        System.out.println("------");
+        /**
+         * 组合操作符
+         *   then  等到上个操作完成在作下一个 when  等到多个操作完成在作下一个
+         */
+
+        //startWith  在数据元素序列的开头插入指定的元素项
+
+        //merge  把多个流合并成一个Flux序列, 该操作按照所有流中元素的实际产生顺序
+        Flux.merge(Flux.interval(Duration.of(100, ChronoUnit.MILLIS)).take(3),
+                Flux.interval(Duration.of(50, ChronoUnit.MILLIS), Duration.of(100, ChronoUnit.MILLIS)).take(3)).toStream()
+                .forEach(System.out::println);
+        System.out.println("------");
+        //不同于merge,  mergeSequential操作符按照所有流被订阅的顺序以流为单位进行合并
+        Flux.mergeSequential(Flux.interval(Duration.ofMillis(100)).take(3),
+                Flux.interval(Duration.ofMillis(50), Duration.ofMillis(100)).take(3));
+
+        //zipWith 把当前流中的元素与另外一个流中的元素按照一对一的方式进行合并
+        Flux.just("a", "b").zipWith(Flux.just("c", "d")).subscribe(System.out::println);
+        //也可通过一个BiFunction函数对合并的元素进行处理
+        Flux.just("a", "b").zipWith(Flux.just("c", "d"), (s1, s2) -> String.format("%s + %s", s1, s2)).subscribe(System.out::println);
+        System.out.println("------");
+
+        /**
+         * 条件操作符
+         *   defaultIfEnpty   skipUntil   skipWhile   takeUntil  takeWhile
+         */
+        //defaultIfEmpth    返回来自原始数据流的元素, 如果原始数据流没有元素,则返回一个默认元素
+
+        //takeUntil将提取元素直到断言条件返回true
+        Flux.range(1, 100).takeUntil(i -> i == 10).subscribe(System.out::println);
+        System.out.println("------");
+        //takeWhile会在continuePredicate条件返回true时才进行元素的提取
+        Flux.range(1, 100).takeWhile(i -> i <= 10).subscribe(System.out::println);
+        //skipUntil丢弃原始数据流中的元素,直到Predicate返回true
+        //skipWhile当continuePredicate返回true时才进行元素的丢弃
+        System.out.println("------");
+
+
+        /**
+         * 数学操作符
+         *
+         *
+             concat 合并来自不同Flux的数据,合并采用顺序的方式
+             count 统计Flux中元素的个数
+             reduce对流中包含的所以元素进行积累操作,得到一个包含计算结果的Mono序列
+                通过一个BiFunction来实现
+         */
+        Flux.range(1, 10).reduce((x, y) -> x + y).subscribe(System.out::println);
+        Flux.range(1, 10).reduceWith(() -> 5, (x, y) -> x + y).subscribe(System.out::println);
+        System.out.println("------");
+
+
+    }
+
+    //场景: 用户上传文件,首先把图片复制到文件服务器,然后把路径信息保存到数据库
+    public Flux<Void> updateFiles(Flux<FilePart> files) {
+        return files.flatMap(file -> {
+            Mono<Void> copyFileToFileServer = Mono.empty(); //....
+            Mono<Void> saveFilePathToDatabase = Mono.empty(); //...
+            return Mono.when(copyFileToFileServer, saveFilePathToDatabase);
+        });
     }
 }

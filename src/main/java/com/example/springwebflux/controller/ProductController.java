@@ -23,7 +23,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Mono<Product> getProductsById(@PathVariable("id") final String id) {
-        return productService.getProductsById(id);
+        return productService.getProductsById(id).defaultIfEmpty(null);
     }
 
     @PostMapping("")
