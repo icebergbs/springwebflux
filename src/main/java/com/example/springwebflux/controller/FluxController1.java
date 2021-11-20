@@ -93,7 +93,36 @@ public class FluxController1 {
          */
         Flux.range(1, 10).reduce((x, y) -> x + y).subscribe(System.out::println);
         Flux.range(1, 10).reduceWith(() -> 5, (x, y) -> x + y).subscribe(System.out::println);
+        System.out.println("------///");
+
+
+        /**
+         *   Observable工具操作符
+         *    delay   subscribe   timeout
+         */
+        //delay将事件的传递向后延迟一段时间
+
+        //
+        Mono.just(100)
+                .concatWith(Mono.error(new IllegalStateException()))
+                .subscribe(System.out::println, System.err::println);
         System.out.println("------");
+
+
+        Mono.just(100)
+                .concatWith(Mono.error(new IllegalStateException()))
+                .onErrorReturn(0)
+                .subscribe(System.out::println);
+        System.out.println("------///");
+
+        //添加响应的订阅逻辑.
+        //   Reactor消息类型有三种,正常消息\错误消息\完成消息,subscribe可以只处理其中包含的正常消息,也可同时处理错误消息和完成消息
+
+        //timeout  维持原始观察者的状态,在特定时间段内没有产生任何事件时,将生成一个异常
+
+        //block  在接受到下一个元素之前一直阻塞
+        //   常用来把响应式数据流转换为传统的数据流
+
 
 
     }

@@ -1,0 +1,12 @@
+
+server:
+  port: 18082
+
+spring:
+  application:
+    name: account-server
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka/
