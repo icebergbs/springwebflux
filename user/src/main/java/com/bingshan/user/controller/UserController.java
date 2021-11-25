@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -23,6 +23,8 @@ public class UserController {
         Mono<Account>  accountMono = webClientBuilder.build().get()
                 .uri("http://account-server/accounts/{accountId}", id)
                 .retrieve().bodyToMono(Account.class);
+        log.info("users-server:  getAccount() id = {} ", id);
+
         return accountMono;
     }
 }

@@ -1,0 +1,58 @@
+
+
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: account
+          predicates:
+            - Path=/gateway/accounts/**
+          filters:
+            - StripPrefix=1
+          uri: lb://account-server
+        - id: user
+          uri: lb://user-server
+          predicates:
+            - Path=/gateway/users/**
+          filters:
+            - StripPrefix=1
+        - id: limiter
+          uri: http://localhost:18090
+          predicates:
+            - Path=/gateway
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 2
+  #      routes:
+#      - id: account-server
+#        uri: lb://account-server
+#        predicates:
+#        - Path=/gateway/accounts/**
+#        filters:
+#          - PrefixPath=/gateway
+#      - id: user-server
+#        uri: lb://user-server
+#        predicates:
+#        - Path=/gateway/users/**
+#        filters:
+#          - PrefixPath=/gateway
+
+  application:
+    name: gateway
+server:
+  port: 18090
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka/
+    register-with-eureka: true
+
+
