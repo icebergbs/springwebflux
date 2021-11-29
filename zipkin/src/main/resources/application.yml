@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: zipkin
+server:
+  port: 19411
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka/
+    register-with-eureka: true
+
+
