@@ -20,5 +20,20 @@ public class Reactor3_1_Core {
 
         List<String> iterable = Arrays.asList("foo", "bar", "foobar");
         Flux<String> seq2 = Flux.fromIterable(iterable);
+
+        //subscribe 方法示例
+        //	订阅并触发序列。
+        //对每一个生成的元素进行消费。
+        //对正常元素进行消费，也对错误进行响应。
+        //对正常元素和错误均有响应，还定义了序列正常完成后的回调。
+
+        //对正常元素、错误和完成信号均有响应， 同时也定义了对该 subscribe 方法返回的 Subscription 执行的回调。
+        SampleSubscriber<Integer> ss = new SampleSubscriber<Integer>();
+        Flux<Integer> ints = Flux.range(1, 4);
+        ints.subscribe(i -> System.out.println(i),
+                error -> System.err.println("Error " + error),
+                () -> {System.out.println("Done");},
+                s -> ss.request(10));
+        ints.subscribe(ss);
     }
 }
