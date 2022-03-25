@@ -97,7 +97,31 @@ public class Reactor3_1_Core {
                     }
             );
         });
+        //推送(push)模式
+        //create 的一个变体是 push，适合生成事件流。与 create`类似，`push 也可以是异步地，
+        // 并且能够使用以上各种溢出策略（overflow strategies）管理背压。
+        Flux<String> bridge1 = Flux.push(sink -> {
+            myEventProcessor.register(
+                    new SingleThreadEventListener<String>() {
+                        @Override
+                        public void onDataChunk(List<String> chunk) {
+                            for (String s : chunk) {
+                                sink.next(s);
+                            }
+                        }
 
+                        @Override
+                        public void processComplete() {
+                            sink.complete();
+                        }
+
+                        @Override
+                        public void processError(Throwable e) {
+                            sink.error(e);
+                        }
+                    }
+            )
+        })
 
 
 
