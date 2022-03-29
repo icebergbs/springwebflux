@@ -1,4 +1,4 @@
-package com.example.springwebflux.controller;
+package com.example.springwebflux.controller.reactorstuday;
 
 import com.example.springwebflux.entity.Account;
 import com.example.springwebflux.entity.MyCustomClientException;

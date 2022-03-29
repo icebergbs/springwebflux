@@ -1,13 +1,11 @@
-package com.example.springwebflux.controller;
+package com.example.springwebflux.controller.reactorstuday;
 
 import org.springframework.http.codec.multipart.FilePart;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 
 public class FluxController1 {
 

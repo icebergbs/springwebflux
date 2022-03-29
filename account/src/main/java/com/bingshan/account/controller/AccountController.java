@@ -29,4 +29,14 @@ public class AccountController {
         return accountService.createOrUpdateAccount(account);
     }
 
+    @GetMapping("/testException")
+    public Mono<String> testException() {
+        try {
+            float a = 1/0;
+        } catch (Exception e) {
+            throw new LinkerRuntimeException(200, "Test Exception!");
+        }
+        return Mono.just("Test Exception");
+    }
+
 }

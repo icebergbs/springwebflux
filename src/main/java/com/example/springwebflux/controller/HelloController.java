@@ -12,4 +12,13 @@ public class HelloController {
     public Mono<String> index() {
         return Mono.just("Hello Spring Boot!");
     }
+
+//    public Mono<String> testException() {
+//        try {
+//            float a = 1/0;
+//        } catch (Exception e) {
+//            throw new LinkerRuntimeException(200, "Test Exception!");
+//        }
+//        return Mono.just("Test ezception");
+//    }
 }

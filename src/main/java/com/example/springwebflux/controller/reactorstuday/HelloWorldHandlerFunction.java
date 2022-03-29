@@ -1,7 +1,6 @@
-package com.example.springwebflux.controller;
+package com.example.springwebflux.controller.reactorstuday;
 
 import com.example.springwebflux.entity.Product;
-import org.springframework.web.reactive.function.BodyExtractor;
 import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.HandlerFunction;
