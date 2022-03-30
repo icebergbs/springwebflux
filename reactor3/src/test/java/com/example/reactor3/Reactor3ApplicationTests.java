@@ -1,13 +1,13 @@
-package com.example.springwebflux;
+package com.example.reactor3;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringwebfluxApplicationTests {
+class Reactor3ApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+	}
 
 }
