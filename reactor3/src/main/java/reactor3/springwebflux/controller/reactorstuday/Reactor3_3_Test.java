@@ -3,6 +3,7 @@ package reactor3.springwebflux.controller.reactorstuday;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import reactor.test.publisher.PublisherProbe;
@@ -18,6 +19,20 @@ import java.time.Duration;
 public class Reactor3_3_Test {
 
     public static void main(String[] args) {
+
+        //7.2. 开启调试模式
+        Hooks.onOperatorDebug();
+
+        //7.3.1. 用 checkpoint() 方式替代
+        //checkpoint() 操作符，它有两种调试技术可用
+        // 1. 以把这个操作符加到链中
+        // 2.  checkpoint(String) 的方法变体，你可以传入一个独特的字符串以方便在 assembly traceback 中识别信息
+
+        //7.4. 记录流的日志
+        Flux<Integer> flux = Flux.range(1, 10)
+                .log()
+                .take(3);
+        flux.subscribe();
 
     }
 
