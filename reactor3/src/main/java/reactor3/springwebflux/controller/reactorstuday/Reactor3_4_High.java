@@ -6,10 +6,14 @@ import reactor.core.publisher.*;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 import reactor.test.publisher.PublisherProbe;
+import reactor.util.context.Context;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -20,6 +24,9 @@ import java.util.function.Function;
  * @date 2022/3/24 13:58
  */
 public class Reactor3_4_High {
+
+    //
+    static final String HTTP_CORRELATION_ID = "reactive.http.library.correlationId";
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -210,12 +217,114 @@ public class Reactor3_4_High {
                 .expectNext("Hello World")
                 .verifyComplete();
 
+        //写入 与 读取 Context 的 相对位置 很重要：因为 Context 是不可变的，它的内容只能被上游的操作符看到，
+        System.out.println("------ 写入 与 读取 Context 的 相对位置  ------");
+        String key1 = "message";
+        Mono<String> r1 = Mono.just("Hello")
+                .subscriberContext(ctx -> ctx.put(key1, "World"))
+                .flatMap( s -> Mono.subscriberContext()
+                        .map( ctx -> s + " " + ctx.getOrDefault(key1, "Stranger")));
+
+        StepVerifier.create(r1)
+                .expectNext("Hello Stranger")
+                .verifyComplete();
+
+        System.out.println("------  Context 的不可变性  ------");
+        String key2 = "message";
+        Mono<String> r2 = Mono.subscriberContext()
+                .map( ctx -> ctx.put(key2, "Hello"))
+                .flatMap( ctx -> Mono.subscriberContext())
+                .map( ctx -> ctx.getOrDefault(key2,"Default"));
+
+        StepVerifier.create(r2)
+                .expectNext("Default")
+                .verifyComplete();
+
+        //如果多次对 Context 中的同一个 key 赋值的话，要看 写入的相对顺序 ：
+        //读取 Context 的操作符只能拿到下游最近的一次写入的值
+        System.out.println("------  写入的相对顺序  ------");
+        String key3 = "message";
+        Mono<String> r3 = Mono.just("Hello")
+                .flatMap( s -> Mono.subscriberContext()
+                        .map( ctx -> s + " " + ctx.get(key3)))
+                .subscriberContext(ctx -> ctx.put(key3, "Reactor"))
+                .subscriberContext(ctx -> ctx.put(key3, "World"));
+
+        StepVerifier.create(r3)
+                .expectNext("Hello Reactor")
+                .verifyComplete();
+
+        // Context 是与 Subscriber 关联的，而每一个操作符访问的 Context 来自其下游的 Subscriber。
+        System.out.println("------ Context 是与 Subscriber 关联的 ------");
+        String key4 = "message";
+        Mono<String> r4 = Mono.just("Hello")
+                .flatMap( s -> Mono.subscriberContext()
+                        .map( ctx -> s + " " + ctx.get(key4)))
+                .subscriberContext(ctx -> ctx.put(key4, "Reactor"))
+                .flatMap( s -> Mono.subscriberContext()
+                        .map( ctx -> s + " " + ctx.get(key4)))
+                .subscriberContext(ctx -> ctx.put(key4, "World"));
+
+        StepVerifier.create(r4)
+                .expectNext("Hello Reactor World")
+                .verifyComplete();
+
+        //对 Context 的赋值也可以在一个 flatMap 内部
+        //传播（Propagation） + 不可变性（immutability）将类似 flatMap 这样的操作符中的创建的内部序列中的 Context 与外部隔离开来。
+        System.out.println("------ flatMap 内部 ------");
+        String key5 = "message";
+        Mono<String> r5 =
+                Mono.just("Hello")
+                        .flatMap( s -> Mono.subscriberContext()
+                                .map( ctx -> s + " " + ctx.get(key5))
+                        )
+                        .flatMap( s -> Mono.subscriberContext()
+                                .map( ctx -> s + " " + ctx.get(key5))
+                                .subscriberContext(ctx -> ctx.put(key5, "Reactor"))
+                        )
+                        .subscriberContext(ctx -> ctx.put(key5, "World"));
+
+        StepVerifier.create(r5)
+                .expectNext("Hello World Reactor")
+                .verifyComplete();
 
 
-
+        System.out.println("------ 完整的例子 ------");
 
 
 
     }
+
+    @Test
+    public void contextForLibraryReactivePut() {
+        Mono<String> put = doPut("www.example.com", Mono.just("Walter"))
+                .subscriberContext(Context.of(HTTP_CORRELATION_ID, "2-j3r9afaf92j-afkaf"))
+                .filter(t -> t.getT1() < 300)
+                .map(Tuple2::getT2);
+
+        StepVerifier.create(put)
+                .expectNext("PUT <Walter> sent to www.example.com with header X-Correlation-ID = 2-j3r9afaf92j-afkaf")
+                .verifyComplete();
+    }
+
+
+    public Mono<Tuple2<Integer, String>> doPut(String url, Mono<String> data) {
+        Mono<Tuple2<String, Optional<Object>>> dataAndContext =
+                data.zipWith(Mono.subscriberContext()
+                        .map(c -> c.getOrEmpty(HTTP_CORRELATION_ID)));
+
+        return dataAndContext
+                .<String>handle((dac, sink) -> {
+                    if (dac.getT2().isPresent()) {
+                        sink.next("PUT <" + dac.getT1() + "> sent to " + url + " with header X-Correlation-ID = " + dac.getT2().get());
+                    }
+                    else {
+                        sink.next("PUT <" + dac.getT1() + "> sent to " + url);
+                    }
+                    sink.complete();
+                })
+                .map(msg -> Tuples.of(200, msg));
+    }
+
 
 }
