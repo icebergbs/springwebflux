@@ -3,6 +3,7 @@ package reactor3.springwebflux.controller.reactorstuday;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.*;
+import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 import reactor.test.publisher.PublisherProbe;
 
@@ -170,6 +171,45 @@ public class Reactor3_4_High {
                 .expectNext(Arrays.asList(7, 8, 9, 10))
                 .expectNext(Collections.singletonList(10))
                 .verifyComplete();
+
+        //8.5. 使用 ParallelFlux 进行并行处理
+        //如今多核架构已然普及，能够方便的进行并行处理是很重要的。
+        // Reactor 提供了一种特殊的类型 ParallelFlux 来实现并行，它能够将操作符调整为并行处理方式。
+        System.out.println("------ parallel() 操作符 ------");
+        //你可以对任何 Flux 使用 parallel() 操作符来得到一个 ParallelFlux.
+        // 不过这个操作符本身并不会进行并行处理，而是将负载划分到多个“轨道（rails）”上 （默认情况下，轨道个数与 CPU 核数相等）。
+        Flux.range(1, 10)
+                .parallel(2)
+                .subscribe(i -> System.out.println(Thread.currentThread().getName() + " -> " + i));
+        //为了配置 ParallelFlux 如何并行地执行每一个轨道，你需要使用 runOn(Scheduler)。
+        // 注意，Schedulers.parallel() 是推荐的专门用于并行处理的调度器。
+        System.out.println("------ runOn(Scheduler) ------");
+        Flux.range(1, 10)
+                .parallel(2)
+                .runOn(Schedulers.parallel())
+                .subscribe(i -> System.out.println(Thread.currentThread().getName() + " -> " +i));
+
+        //8.6. 替换默认的 Schedulers   xxxx没看懂
+
+
+
+        //8.7. 使用全局的 Hooks
+
+
+
+        //8.8. 增加一个 Context 到响应式序列
+        System.out.println("------ Context ------");
+        String key = "message";
+        Mono<String> r = Mono.just("Hello")
+                .flatMap(s ->
+                    Mono.subscriberContext()
+                            .map(ctx -> s + " " + ctx.get(key)))
+                .subscriberContext(ctx -> ctx.put(key, "World"));
+        r.subscribe(System.out::println);
+        StepVerifier.create(r)
+                .expectNext("Hello World")
+                .verifyComplete();
+
 
 
 

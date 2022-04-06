@@ -1,4 +1,4 @@
-package com.example.reactor3;
+package reactor3;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
