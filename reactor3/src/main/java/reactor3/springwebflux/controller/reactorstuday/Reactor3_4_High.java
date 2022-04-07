@@ -209,9 +209,9 @@ public class Reactor3_4_High {
         String key = "message";
         Mono<String> r = Mono.just("Hello")
                 .flatMap(s ->
-                    Mono.subscriberContext()
-                            .map(ctx -> s + " " + ctx.get(key)))
-                .subscriberContext(ctx -> ctx.put(key, "World"));
+                    Mono.deferContextual(ctx ->
+                            Mono.just(s + " " + ctx.get(key))))
+                .contextWrite(ctx -> ctx.put(key, "World"));
         r.subscribe(System.out::println);
         StepVerifier.create(r)
                 .expectNext("Hello World")
