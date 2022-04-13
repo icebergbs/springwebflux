@@ -62,17 +62,21 @@ public class FluxController1 {
         Flux.just("a", "b").zipWith(Flux.just("c", "d")).subscribe(System.out::println);
         //也可通过一个BiFunction函数对合并的元素进行处理
         Flux.just("a", "b").zipWith(Flux.just("c", "d"), (s1, s2) -> String.format("%s + %s", s1, s2)).subscribe(System.out::println);
-        System.out.println("------");
+
 
         /**
          * 条件操作符
          *   defaultIfEnpty   skipUntil   skipWhile   takeUntil  takeWhile
          */
+        System.out.println("---   defaultIfEmpth ---");
         //defaultIfEmpth    返回来自原始数据流的元素, 如果原始数据流没有元素,则返回一个默认元素
+        Mono.empty().map(x -> x).defaultIfEmpty(0).subscribe(System.out::println);
+        Mono.just(1).map(x -> x).defaultIfEmpty(-1).subscribe(System.out::println);
 
+        System.out.println("---  takeUntil ---");
         //takeUntil将提取元素直到断言条件返回true
         Flux.range(1, 100).takeUntil(i -> i == 10).subscribe(System.out::println);
-        System.out.println("------");
+        System.out.println("--- takeWhile ---");
         //takeWhile会在continuePredicate条件返回true时才进行元素的提取
         Flux.range(1, 100).takeWhile(i -> i <= 10).subscribe(System.out::println);
         //skipUntil丢弃原始数据流中的元素,直到Predicate返回true
