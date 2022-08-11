@@ -10,10 +10,12 @@ import reactor.core.publisher.Mono;
 import reactor3.springwebflux.entity.Article;
 import reactor3.springwebflux.service.ArticleReactiveRedisRepository;
 
+import javax.annotation.Resource;
+
 @Service
 public class ArticleReactiveRedisRepositoryImpl implements ArticleReactiveRedisRepository {
 
-    @Autowired
+    @Resource
     private ReactiveRedisTemplate<String, Object > reactiveRedisTemplate;
 
     private static final String HASH_NAME = "Artivle:";
