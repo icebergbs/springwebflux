@@ -2,6 +2,7 @@ package reactor3.springwebflux.controller;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
 import reactor3.springwebflux.service.ProductHandler;
