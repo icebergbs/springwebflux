@@ -1,4 +1,4 @@
-package reactor3.springwebflux.controller.reactorstuday;
+package cn.bingshan.reactor3.demo.reactorstuday;
 
 import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.BodyInserters;
