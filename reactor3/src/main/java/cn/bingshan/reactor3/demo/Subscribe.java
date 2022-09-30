@@ -25,9 +25,9 @@ public class Subscribe {
     }
 
     private static void switchOnError() {
-        Flux.just(1, 2)
-                .concatWith(Mono.error(new IllegalStateException()))
-                .switchOnError(Mono.just(0))
-                .subscribe(System.out::println);
+//        Flux.just(1, 2)
+//                .concatWith(Mono.error(new IllegalStateException()))
+//                .switchOnError(Mono.just(0))
+//                .subscribe(System.out::println);
     }
 }
