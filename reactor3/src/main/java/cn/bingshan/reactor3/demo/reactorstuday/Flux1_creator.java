@@ -6,30 +6,37 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.util.Optional;
 
-public class FluxController {
+public class Flux1_creator {
 
     /**
      *创建Flux 方式可以分为两大类:
      *  1.Flux的静态方法, 2. 动态创建Flux
      */
     public static void main(String[] args) {
-        //1
+        //1.
+        // just() 一般情况下，子啊已知元素数量和内容时
         Flux.just("Hello", "World").subscribe(System.out::println);
         System.out.println("------");
 
+        // fromArray() fromIterable() fromStream() 如果已经有了一个数组、一个Iterable对象或Stream对象
         Flux.fromArray(new Integer[] {1,2,3}).subscribe(System.out::println);
         System.out.println("------");
 
+        // empty、error()、never()
         Flux.empty().subscribe(System.out::println);
         System.out.println("------");
 
+        // range() 创建包含从start起始的count个对象的序列，所有对象类型都是Integer
         Flux.range(1,5).subscribe(System.out::println);
         System.out.println("------");
+
+        // interval()，表现为一个方系列，创建一个包含从0开始递增的Long对象的序列，序列中的元素
+        // 按照指定的时间间隔来发布
 
 
         //2
         /**
-         * 式来产生Flux序列, 序列的产生依赖Reactor所提供的SynchronousSink组件
+         * generate() 通过同步和逐一的方式来产生Flux序列, 序列的产生依赖Reactor所提供的SynchronousSink组件
          *   逐一: 含义是在具体的元素生成逻辑中,next()方法最多只能被调用一次
          */
 
@@ -52,7 +59,7 @@ public class FluxController {
         }).subscribe(System.out::println);
 
 
-        //创建 Mono
+        /**   创建 Mono  */
         System.out.println("------Mono static--------");
         Mono.just("Hello").subscribe(System.out::println);
         Mono.empty().subscribe(System.out::println);

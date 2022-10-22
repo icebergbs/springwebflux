@@ -16,7 +16,7 @@ public class AccountService {
         Account account = new Account();
         account.setAccountId("1");
         account.setAccountName("zhanghao name");
-        account.setPhone("110");
+        account.setPHoNe("110");
         accountMap.put(account.getAccountId(), account);
     }
 

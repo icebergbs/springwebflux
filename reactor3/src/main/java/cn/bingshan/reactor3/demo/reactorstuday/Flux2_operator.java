@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
-public class FluxController1 {
+public class Flux2_operator {
 
     /**
      * Flux 和 Mono操作符
