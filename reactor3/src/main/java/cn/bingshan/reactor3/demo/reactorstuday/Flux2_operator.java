@@ -13,35 +13,61 @@ public class Flux2_operator {
      * Flux 和 Mono操作符
      */
     public static void main(String[] args) {
-        //    buffer
+        /**
+         * 转换操作符
+         */
+
+        //1. buffer 把当前流中的元素收集到集合中，并把集合对象作为流中的新元素。
+        //    可以指定集合对象所包含的元素的最大数量
         Flux.range(1, 50).buffer(10).subscribe(System.out::println);
-        System.out.println("------");
+        System.out.println("---buffer---");
         /**
          * bufferTimeout()指定时间间隔进行收集
          * bufferUntil()会一直收集,直到断言条件返回true
-         * bufferWhile() 只有当断言条件返回true时才会收集
+         * bufferWhile() 只有当断言条件返回true时才会收集，一旦值为false,会立即开始下一次收集。
          */
         Flux.range(1, 10).bufferUntil(i -> i % 2 == 0).subscribe(System.out::println);
-        System.out.println("------");
+        System.out.println("---bufferUntil---");
         Flux.range(1, 10).bufferWhile(i -> i % 2 == 0).subscribe(System.out::println);
-
-        //map
+        System.out.println("---bufferWhile---");
+        //2. map 映射操作，对流中的每个元素应用一个映射函数，从而到达变换效果。
         Flux.range(1,3).map(x -> x * x);
-        System.out.println("------");
+        System.out.println("---map---");
 
-        //flatMap  把流中的每个元素转换成一个流 ,在把转换之后得到的所以流中的元素进行合并
+        //3. flatMap  把流中的每个元素转换成一个流 ,在把转换之后得到的所以流中的元素进行合并
         Flux.range(1,3).flatMap(x -> Mono.just(x * x)).subscribe(System.out::println);
+        System.out.println("---flatMap---");
+        // 在系统开发过程中，经常会碰到对从数据库中查询的数据项进行逐一处理的场景，这是可以充分利用flatMap的特性。
+        // 例如使用该操作符对从数据库中获取的数据进行逐一删除的方法。
+        //Mono<Void> deleteFiles = findReposotory.findByName(fileName).flatMap(fileRepository::delete);
 
-        //window  类似于buffer ,所不同的是,window 操作符是把当前流中的元素收集到另外的Flux序列中, 因此返回值是Flux<Flux<T>>
+        //4. window  类似于buffer ,所不同的是,window 操作符是把当前流中的元素收集到另外的Flux序列中,
+        //   因此返回值是Flux<Flux<T>>
         Flux.range(1, 5).window(2).toIterable().forEach(w -> {
             w.subscribe(System.out::println);
-            System.out.println("------");
+            System.out.println("---window---");
         });
 
 
-        //过滤操作符: filter  first  last  skip 忽略数据流的前n 个元素    take   按照指定的数量来提取元素,也可以按照指定的时间间隔
+        /**
+         * 过滤操作符: filter  first  last  skip
+         */
+        //1. filter 对流中包含的元素进行过滤，只留下满足指定过滤条件的元素。
         Flux.range(1, 10).filter(i -> i % 2 == 0).subscribe(System.out::println);
-        System.out.println("------");
+        System.out.println("---filter---");
+
+        //2. first   返回流中第一个元素
+        //3. last
+
+        //4. skip 忽略数据流的前n 个元素   skipLast 忽略流的最后n个元素。
+
+        //5. take   按照指定的数量来提取元素,也可以按照指定的时间间隔  takeLast
+        Flux.range(1, 100).take(10).subscribe(System.out::println);
+        Flux.range(1, 100).takeLast(10).subscribe(System.out::println);
+        System.out.println("---take---");
+
+
+
         /**
          * 组合操作符
          *   then  等到上个操作完成在作下一个 when  等到多个操作完成在作下一个
