@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
-public class Flux2_operator {
+public class Spring_Flux2_operator {
 
     /**
      * Flux 和 Mono操作符
@@ -118,11 +118,6 @@ public class Flux2_operator {
 
         /**
          * 数学操作符
-         *
-         *
-
-
-
          */
         //1. concat 合并来自不同Flux的数据,合并采用顺序的方式
 
@@ -140,28 +135,32 @@ public class Flux2_operator {
          *   Observable工具操作符
          *    delay   subscribe   timeout
          */
-        //delay将事件的传递向后延迟一段时间
+        //1. delay将事件的传递向后延迟一段时间
 
-        //
+        //2. subscribe 添加响应的订阅逻辑
+        //   Reactor消息类型有三种,正常消息\错误消息\完成消息,subscribe可以只处理其中包含的正常消息,也可同时处理错误消息和完成消息。
+        //          subscribe操作符可以只处理其中包含的正常消息，也可以同时处理错误消息和完成消息。
+        //  处理正常和错误消息
         Mono.just(100)
                 .concatWith(Mono.error(new IllegalStateException()))
                 .subscribe(System.out::println, System.err::println);
         System.out.println("------");
 
-
+        //有时候不想直接抛出异常， 而是希望采用一种容错策略来返回一个默认值。
         Mono.just(100)
                 .concatWith(Mono.error(new IllegalStateException()))
                 .onErrorReturn(0)
                 .subscribe(System.out::println);
         System.out.println("------///");
 
-        //添加响应的订阅逻辑.
-        //   Reactor消息类型有三种,正常消息\错误消息\完成消息,subscribe可以只处理其中包含的正常消息,也可同时处理错误消息和完成消息
+        // 另一种容错策略是通过swaitchOnError()方法使用另外的流来产生元素
 
-        //timeout  维持原始观察者的状态,在特定时间段内没有产生任何事件时,将生成一个异常
 
-        //block  在接受到下一个元素之前一直阻塞
+        //3. timeout  维持原始观察者的状态,在特定时间段内没有产生任何事件时,将生成一个异常
+
+        //4. block  在接受到下一个元素之前一直阻塞
         //   常用来把响应式数据流转换为传统的数据流
+        Mono.just(10).block(Duration.ofSeconds(5));
 
 
 
