@@ -70,12 +70,17 @@ public class Flux2_operator {
 
         /**
          * 组合操作符
-         *   then  等到上个操作完成在作下一个 when  等到多个操作完成在作下一个
+         *
          */
 
-        //startWith  在数据元素序列的开头插入指定的元素项
+        //1. then  等到上个操作完成在作下一个 when  等到多个操作完成在作下一个
+        //如下代码很好的展示了when操作符的实际应用场景. 我们对用户上传的文件进行处理,
+        //首先把图片复制到文件服务器的某一个路径,然后把路径信息保存到数据库,需要两个操作都完成之后方法才能返回.
+        //Mono.when(copyFileToFileServer, saveFilePathToDatabase);
 
-        //merge  把多个流合并成一个Flux序列, 该操作按照所有流中元素的实际产生顺序
+        //2. startWith  在数据元素序列的开头插入指定的元素项
+
+        //3. merge  把多个流合并成一个Flux序列, 该操作按照所有流中元素的实际产生顺序
         Flux.merge(Flux.interval(Duration.of(100, ChronoUnit.MILLIS)).take(3),
                 Flux.interval(Duration.of(50, ChronoUnit.MILLIS), Duration.of(100, ChronoUnit.MILLIS)).take(3)).toStream()
                 .forEach(System.out::println);
@@ -84,9 +89,9 @@ public class Flux2_operator {
         Flux.mergeSequential(Flux.interval(Duration.ofMillis(100)).take(3),
                 Flux.interval(Duration.ofMillis(50), Duration.ofMillis(100)).take(3));
 
-        //zipWith 把当前流中的元素与另外一个流中的元素按照一对一的方式进行合并
+        //4. zipWith 把当前流中的元素与另外一个流中的元素按照一对一的方式进行合并
         Flux.just("a", "b").zipWith(Flux.just("c", "d")).subscribe(System.out::println);
-        //也可通过一个BiFunction函数对合并的元素进行处理
+        //也可通过一个BiFunction函数对合并的元素进行处理, 所得到的流的元素类型为该函数的返回值.
         Flux.just("a", "b").zipWith(Flux.just("c", "d"), (s1, s2) -> String.format("%s + %s", s1, s2)).subscribe(System.out::println);
 
 
@@ -95,18 +100,19 @@ public class Flux2_operator {
          *   defaultIfEnpty   skipUntil   skipWhile   takeUntil  takeWhile
          */
         System.out.println("---   defaultIfEmpth ---");
-        //defaultIfEmpth    返回来自原始数据流的元素, 如果原始数据流没有元素,则返回一个默认元素
+        //1. defaultIfEmpth    返回来自原始数据流的元素, 如果原始数据流没有元素,则返回一个默认元素
+        //在实际开发过程中应用广泛,通常在对方法返回值的处理上. 例如,controller返回一个空对象和404状态码
         Mono.empty().map(x -> x).defaultIfEmpty(0).subscribe(System.out::println);
         Mono.just(1).map(x -> x).defaultIfEmpty(-1).subscribe(System.out::println);
 
         System.out.println("---  takeUntil ---");
-        //takeUntil将提取元素直到断言条件返回true
+        //2. 其中Predicate代表一种断言条件, takeUntil将提取元素直到断言条件返回true
         Flux.range(1, 100).takeUntil(i -> i == 10).subscribe(System.out::println);
         System.out.println("--- takeWhile ---");
-        //takeWhile会在continuePredicate条件返回true时才进行元素的提取
+        //3. continuePredicate也是一种断言条件, takeWhile会在continuePredicate条件返回true时才进行元素的提取
         Flux.range(1, 100).takeWhile(i -> i <= 10).subscribe(System.out::println);
-        //skipUntil丢弃原始数据流中的元素,直到Predicate返回true
-        //skipWhile当continuePredicate返回true时才进行元素的丢弃
+        //4. skipUntil丢弃原始数据流中的元素,直到Predicate返回true
+        //5. skipWhile当continuePredicate返回true时才进行元素的丢弃
         System.out.println("------");
 
 
@@ -114,11 +120,17 @@ public class Flux2_operator {
          * 数学操作符
          *
          *
-             concat 合并来自不同Flux的数据,合并采用顺序的方式
-             count 统计Flux中元素的个数
-             reduce对流中包含的所以元素进行积累操作,得到一个包含计算结果的Mono序列
-                通过一个BiFunction来实现
+
+
+
          */
+        //1. concat 合并来自不同Flux的数据,合并采用顺序的方式
+
+        //2. count 统计Flux中元素的个数
+
+        //3. reduce对流中包含的所以元素进行积累操作,得到一个包含计算结果的Mono序列
+        //                通过一个BiFunction来实现
+        //   reduceWith 用来在进行reduce操作时指定一个初始值
         Flux.range(1, 10).reduce((x, y) -> x + y).subscribe(System.out::println);
         Flux.range(1, 10).reduceWith(() -> 5, (x, y) -> x + y).subscribe(System.out::println);
         System.out.println("------///");
