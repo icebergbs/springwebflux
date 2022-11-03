@@ -1,4 +1,4 @@
-package cn.bingshan.reactor3.demo.reactorstuday;
+package cn.bingshan.reactor3.reactorstuday;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.util.Optional;
 
-public class Spring_Flux1_creator {
+public class Flux1_creator {
 
     /**
      *创建Flux 方式可以分为两大类:

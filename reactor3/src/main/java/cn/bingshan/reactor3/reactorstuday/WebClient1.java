@@ -1,4 +1,4 @@
-package cn.bingshan.reactor3.demo.reactorstuday;
+package cn.bingshan.reactor3.reactorstuday;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

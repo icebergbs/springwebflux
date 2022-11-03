@@ -1,4 +1,4 @@
-package cn.bingshan.reactor3.demo.reactorstuday;
+package cn.bingshan.reactor3.reactorstuday;
 
 import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.BodyInserters;

@@ -1,12 +1,11 @@
-package cn.bingshan.reactor3.demo.reactorstuday;
+package cn.bingshan.reactor3.reactorstuday;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.Optional;
 
-public class Spring_Mono1_creator {
+public class Mono1_creator {
 
     /**
      * 创建 Mono
