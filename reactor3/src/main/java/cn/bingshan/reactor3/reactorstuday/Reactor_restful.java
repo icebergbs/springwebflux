@@ -50,8 +50,6 @@ public class Reactor_restful {
      *    2. 使用函数式编程模型创建响应式RESTful 服务
      *       HelloRoute.java  HellowHandler.java
      *
-     *
-     *
      */
 
 
@@ -72,6 +70,15 @@ public class Reactor_restful {
                 .andRoute(POST("/person").and(contentType(MediaType.APPLICATION_JSON)),
                         new HelloWorldHandlerFunction());
     }
+
+    /**
+     * 全栈式响应式编程：
+     *      响应式开发方式的有效性取决于在整个请求链路的各个环节是否都采用了响应式编程模型。
+     *      如果某一个环节或步骤不是响应式的，就会出现同步阻塞，从而导致背压机制无法生效。
+     *      如果某一层组件（例如数据访问层）无法采用响应式编程模型，那么响应式编程的概念对于
+     *      整个请求链路的其他层而言就没有意义。
+     *
+     */
 
 
 
