@@ -1,4 +1,4 @@
-package cn.bingshan.reactor3.reactorstuday;
+package reactor3.springwebflux.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +20,8 @@ import static org.springframework.web.reactive.function.client.ExchangeFilterFun
  * WebClient
  * RestTemplate的响应式版本 WebClient工具类
  */
-public class WebClient2 {
-    public static final Logger LOG = LoggerFactory.getLogger(WebClient2.class);
+public class WebClient6_2 {
+    public static final Logger LOG = LoggerFactory.getLogger(WebClient6_2.class);
 
     public static void main(String[] args) {
 

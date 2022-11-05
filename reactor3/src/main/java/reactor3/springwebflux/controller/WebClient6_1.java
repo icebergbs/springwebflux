@@ -1,4 +1,4 @@
-package cn.bingshan.reactor3.reactorstuday;
+package reactor3.springwebflux.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +30,8 @@ import static org.springframework.web.reactive.function.client.ExchangeFilterFun
  * WebClient
  * RestTemplate的响应式版本 WebClient工具类
  */
-public class WebClient1 {
-    public static final Logger LOG = LoggerFactory.getLogger(WebClient1.class);
+public class WebClient6_1 {
+    public static final Logger LOG = LoggerFactory.getLogger(WebClient6_1.class);
 
     public static void main(String[] args) {
 
@@ -120,7 +120,7 @@ public class WebClient1 {
         WebClient clientFilter = WebClient.builder()
                 .filter(basicAuthentication("user", "password"))
                 .build();
-
+        //logRequest()过滤器的作用是对每一个请求做详细的日志记录
         WebClient clientFilterDef = WebClient.builder()
                 .filter(logRequest())
                 .build();
