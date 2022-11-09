@@ -1,6 +1,6 @@
 package cn.bingshan.reactor3.guanwang;
 
-import org.junit.Test;
+//import org.junit.Test;
 import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.UnicastProcessor;
 
@@ -22,7 +22,7 @@ public class Reactor3_2_Core {
     }
 
 
-    @Test
+    //@Test
     public void testSink() {
         //4.8.2. 使用 Sink 门面对象来线程安全地生成流
         UnicastProcessor<Integer> processor = UnicastProcessor.create();

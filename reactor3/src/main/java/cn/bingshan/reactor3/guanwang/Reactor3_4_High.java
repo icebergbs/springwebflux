@@ -1,6 +1,6 @@
 package cn.bingshan.reactor3.guanwang;
 
-import org.junit.Test;
+//import org.junit.Test;
 import reactor.core.publisher.*;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
@@ -292,7 +292,7 @@ public class Reactor3_4_High {
 
     }
 
-    @Test
+    //@Test
     public void contextForLibraryReactivePut() {
         Mono<String> put = doPut("www.example.com", Mono.just("Walter"))
                 .subscriberContext(Context.of(HTTP_CORRELATION_ID, "2-j3r9afaf92j-afkaf"))

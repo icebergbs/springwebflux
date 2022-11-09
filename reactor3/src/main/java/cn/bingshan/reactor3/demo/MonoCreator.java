@@ -1,6 +1,6 @@
 package cn.bingshan.reactor3.demo;
 
-import org.junit.Test;
+//import org.junit.Test;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
@@ -24,7 +24,7 @@ public class MonoCreator {
      *
      * mono defer方法创建数据源属于懒汉型，与Mono.just等创建数据源则是饿汉型，下面看一个例子：
      */
-    @Test
+    //@Test
     public void defer(){
         //声明阶段创建DeferClass对象
         Mono<Date> m1 = Mono.just(new Date());

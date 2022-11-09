@@ -1,4 +1,4 @@
-package com.example.reactor3;
+package reactor3.springwebflux;
 
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
