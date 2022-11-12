@@ -18,7 +18,7 @@ import java.net.InetSocketAddress;
  */
 public class N2_2_EchoServer {
 
-    private static int port = 8080;
+    private static int port = 8010;
 
     public N2_2_EchoServer(int port) {
         this.port = port;
@@ -55,5 +55,10 @@ public class N2_2_EchoServer {
      *   在 5. 处使用了一个特殊的类 -- ChannelInitializer. 这是关键。当一个新的连接被接受时，一个新的子Channel将会被创建，
      * 而ChannelInitializer将会把一个你的EchoServerHandler的实例添加到该Channel的Channel的ChannelPipeline中。
      * 这个ChannelHandler将会收到有关入站消息的通知。
+     *   虽然NIO是可伸缩的， 但是其适当的尤其是关于多线程处理的配置并不简单。 Netty的设计封装了大部分的复杂性。
+     *   在6. 绑定了服务器，并等待绑定完成。(对sync()的调用将导致当前Thread阻塞，一直到绑定操作完成为止)
+     *   在7. 该应用程序将会阻塞等待直到服务器的Channel关闭（因为调用了 sync()）。
+     *   在8. 然后你将可以关 EventLoopGroup ， 并释放所有的资源，包括所有被创建的线程。
+     *
      */
 }
