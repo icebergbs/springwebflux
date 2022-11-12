@@ -21,6 +21,11 @@ import static de.flapdoodle.embed.mongo.Command.Mongo;
 
 /**
  * 测试内嵌式MongoDB
+ *   1. 引入 flapdoodle依赖
+ *      flapdoodle是一个内嵌式MongoDB数据库，与传统的关系型数据库中使用的H2内嵌式类似
+ *
+ *   2. @DataMongoTest
+ *      会使用测试配置自动创建与MongoDB的连接以及ReactiveMongoTemplate工具类
  */
 @RunWith(SpringRunner.class)
 @DataMongoTest
