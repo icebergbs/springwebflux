@@ -62,7 +62,7 @@ public class WebClient6_1 {
         //还可以通过使用uriBuilder来获取对请求信息的完全控制
         listOrders("aa", "token");
 
-        //2.2 retireve()  获取响应主体并对其进行解码的最简单方法
+        //2.2 retrieve()  获取响应主体并对其进行解码的最简单方法
         Mono<Person> result2 = webClient.get()
                 .uri("/v1/account/{id}", 11)
                 .accept(MediaType.APPLICATION_JSON)   //Json作为序列化  MediaType.TEXT_EVENT_STREAM 实现基于流的处理

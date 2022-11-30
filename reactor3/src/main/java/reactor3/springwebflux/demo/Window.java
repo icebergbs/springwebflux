@@ -1,4 +1,4 @@
-package cn.bingshan.reactor3.demo;
+package reactor3.springwebflux.demo;
 
 import reactor.core.publisher.Flux;
 

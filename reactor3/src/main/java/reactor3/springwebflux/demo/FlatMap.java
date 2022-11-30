@@ -1,6 +1,4 @@
-package cn.bingshan.reactor3.demo;
-
-import reactor.core.publisher.Flux;
+package reactor3.springwebflux.demo;
 
 public class FlatMap {
 
