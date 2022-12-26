@@ -15,8 +15,8 @@ public class N6_7_ChannelHandlerContext {
 
     public void channel() {
 //        ChannelHandlerContext ctx = new ChannelHandlerContext() {};
-//        ChannelPipeline pipeline = ctx.pipeline(); //获取与ChannelHandlerContext 相关联的ChannelPipeline的引用
-//        pipeline.write(Unpooled.copiedBuffer("Netty in Action", CharsetUtil.UTF_8));  //通过ChannelPipeline写入缓存区
+////        ChannelPipeline pipeline = ctx.pipeline(); //获取与ChannelHandlerContext 相关联的ChannelPipeline的引用
+////        pipeline.write(Unpooled.copiedBuffer("Netty in Action", CharsetUtil.UTF_8));  //通过ChannelPipeline写入缓存区
 
 
     }
