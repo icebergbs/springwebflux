@@ -15,6 +15,7 @@ public class Main1 {
         //关于响应式编程的Rx标准，已经写入了JDK中， 即java.util.concurrent.Flow
         Publisher<String> p = null;
         //reactor.core.publisher.Flux.fromArray()
+        //LambdaSubscriber
 
     }
 
